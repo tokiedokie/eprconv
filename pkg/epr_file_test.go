@@ -16,5 +16,11 @@ func TestGetCfg(t *testing.T) {
 }
 
 func TestGetData(t *testing.T) {
-	testEprFile.getData()
+	testEprFile.cfgMap["BSEQ"] = "LIT"
+	data1 := testEprFile.getData().([]int32)
+	testEprFile.cfgMap["BSEQ"] = "BIG"
+	data2 := testEprFile.getData().([]int32)
+	if data1[0] == data2[0] {
+		t.Fatal()
+	}
 }
