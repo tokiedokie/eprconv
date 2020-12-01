@@ -6,18 +6,15 @@ import (
 	"os"
 )
 
-func getMatrix() {
-	
-}
-
-func readFile(filePath string, data interface{}) {
+func readFile(filePath string, endian binary.ByteOrder, data interface{}) {
 	file, err := os.Open(filePath)
 	if err != nil {
 		fmt.Println("error, cannot open a file")
 		panic(err)
 	}
-	
-	err = binary.Read(file, binary.BigEndian, data)
+	defer file.Close()
+
+	err = binary.Read(file, endian, data)
 	if err != nil {
 		fmt.Println("error, cannot read binary")
 		panic(err)

@@ -20,9 +20,9 @@ func EprLoad(filePath string) {
 	switch asumeFormat(filePath) {
 		case brukerBES3T:
 			loadBrukerBES3T()
+		default:
+			panic("cannot load a epr file")
 	}
-
-	getMatrix()
 }
 
 func asumeFormat(filePath string) fileFormat {
@@ -34,5 +34,5 @@ func asumeFormat(filePath string) fileFormat {
 }
 
 func loadBrukerBES3T() {
-	
+
 }
