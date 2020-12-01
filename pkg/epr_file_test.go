@@ -33,3 +33,9 @@ func TestGetData(t *testing.T) {
 	data2 := testEprFile.getData()
 	assert.NotEqual(t, data1, data2)
 }
+
+func TestNumberOfData(t *testing.T) {
+	data1 := len(testEprFile.getData().([]int32))
+	data2 := len(testEprFile.axes.x)
+	assert.Equal(t, data1, data2)
+}
