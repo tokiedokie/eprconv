@@ -15,9 +15,9 @@ type eprFileMethod interface {
 }
 
 type eprFile struct {
-	dataPath string
-	cfgPath  string
-	cfgMap   map[string]string
+	dataPath   string
+	cfgPath    string
+	cfgMap     map[string]string
 	fileFormat fileFormat
 }
 
