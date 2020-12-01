@@ -10,7 +10,7 @@ import (
 func TestReadOneByte(t *testing.T) {
 	var data int32
 	readFile(dataPath, binary.BigEndian, &data)
-	assert.Equal(t, data, -40)
+	assert.Equal(t, data, int32(-40))
 }
 
 func TestReadFile(t *testing.T) {
