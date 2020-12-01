@@ -15,8 +15,8 @@ type eprFileMethod interface {
 
 type eprFile struct {
 	dataPath string
-	cfgPath string
-	cfgMap map[string]string
+	cfgPath  string
+	cfgMap   map[string]string
 }
 
 func newEprFile(dataPath string, cfgPath string) *eprFile {
@@ -30,54 +30,56 @@ func newEprFile(dataPath string, cfgPath string) *eprFile {
 func (e *eprFile) getData() interface{} {
 	// TODO: fix this if there is a better way
 	switch e.cfgMap["IRFMT"] {
-		case "C":
-			data := make([]int8, e.dataSize()/1)
-			readFile(e.dataPath, binary.BigEndian, &data)
-			return data
-		case "S":
-			data := make([]int16, e.dataSize()/2)
-			readFile(e.dataPath, binary.BigEndian, &data)
-			return data
-		case "I":
-			data := make([]int32, e.dataSize()/4)
-			readFile(e.dataPath, binary.BigEndian, &data)
-			return data
-		case "F":
-			data := make([]float32, e.dataSize()/4)
-			readFile(e.dataPath, binary.BigEndian, &data)
-			return data
-		case "D":
-			data := make([]float32, e.dataSize()/8)
-			readFile(e.dataPath, binary.BigEndian, &data)
-			return data
-		case "A":
-			panic("Cannot read BES3T data in ASCII format!")
-		case "0", "N":
-			panic("No BES3T data!")
-		default:
-			panic("Unknown value for keyword IRFMT in .DSC file!")
+	case "C":
+		data := make([]int8, e.dataSize()/1)
+		readFile(e.dataPath, binary.BigEndian, &data)
+		return data
+	case "S":
+		data := make([]int16, e.dataSize()/2)
+		readFile(e.dataPath, binary.BigEndian, &data)
+		return data
+	case "I":
+		data := make([]int32, e.dataSize()/4)
+		readFile(e.dataPath, binary.BigEndian, &data)
+		return data
+	case "F":
+		data := make([]float32, e.dataSize()/4)
+		readFile(e.dataPath, binary.BigEndian, &data)
+		return data
+	case "D":
+		data := make([]float32, e.dataSize()/8)
+		readFile(e.dataPath, binary.BigEndian, &data)
+		return data
+	case "A":
+		panic("Cannot read BES3T data in ASCII format!")
+	case "0", "N":
+		panic("No BES3T data!")
+	default:
+		panic("Unknown value for keyword IRFMT in .DSC file!")
 	}
 }
 
 func (e *eprFile) getCfg() map[string]string {
 	cfgFile, _ := os.Open(e.cfgPath)
 	defer cfgFile.Close()
-	
+
 	scanner := bufio.NewScanner(cfgFile)
 
 	cfgMap := make(map[string]string)
 
 	for scanner.Scan() {
 		text := scanner.Text()
-		if strings.HasPrefix(text, "#") || strings.HasPrefix(text, "*") { continue }
+		if strings.HasPrefix(text, "#") || strings.HasPrefix(text, "*") {
+			continue
+		}
 		kv := strings.Fields(text)
 		if len(kv) < 2 {
-			cfgMap[kv[0]] = ""	
+			cfgMap[kv[0]] = ""
 			continue
 		}
 		cfgMap[kv[0]] = kv[1]
 	}
-	
+
 	return cfgMap
 }
 

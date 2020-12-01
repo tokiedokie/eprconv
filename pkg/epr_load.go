@@ -9,7 +9,7 @@ import (
 type fileFormat int
 
 const (
-	brukerBES3T	fileFormat = iota + 1
+	brukerBES3T fileFormat = iota + 1
 )
 
 func (f fileFormat) String() string {
@@ -18,17 +18,17 @@ func (f fileFormat) String() string {
 
 func EprLoad(filePath string) {
 	switch asumeFormat(filePath) {
-		case brukerBES3T:
-			loadBrukerBES3T(filePath)
-		default:
-			panic("cannot load a epr file")
+	case brukerBES3T:
+		loadBrukerBES3T(filePath)
+	default:
+		panic("cannot load a epr file")
 	}
 }
 
 func asumeFormat(filePath string) fileFormat {
 	switch strings.ToLower(filepath.Ext(filePath)) {
-		case ".dta", ".dsc" :
-			return brukerBES3T
+	case ".dta", ".dsc":
+		return brukerBES3T
 	}
 	panic("format is not supported")
 }
