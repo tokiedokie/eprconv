@@ -1,7 +1,6 @@
 package pkg
 
 import (
-	"fmt"
 	"path/filepath"
 	"strings"
 )
@@ -11,10 +10,6 @@ type fileFormat int
 const (
 	brukerBES3T fileFormat = iota + 1
 )
-
-func (f fileFormat) String() string {
-	return fmt.Sprintf("%#02x", int(f))
-}
 
 func EprLoad(filePath string) {
 	switch asumeFormat(filePath) {
