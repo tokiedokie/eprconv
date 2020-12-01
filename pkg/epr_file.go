@@ -3,6 +3,7 @@ package pkg
 import (
 	"bufio"
 	"encoding/binary"
+	"log"
 	"os"
 	"strings"
 )
@@ -29,26 +30,40 @@ func newEprFile(dataPath string, cfgPath string) *eprFile {
 
 func (e *eprFile) getData() interface{} {
 	// TODO: fix this if there is a better way
+
+	var byteOrder binary.ByteOrder
+	BSEQ, ok := e.cfgMap["BSEQ"]
+	if !ok {
+		log.Println("Keyword BSEQ not found in .DSC file! Assuming BSEQ=BIG.")
+		byteOrder = binary.BigEndian
+	} else if BSEQ == "BIG" {
+		byteOrder = binary.BigEndian
+	} else if BSEQ == "LIT" {
+		byteOrder = binary.LittleEndian
+	} else {
+		panic("Unknown value for keyword BSEQ in .DSC file!")
+	}
+
 	switch e.cfgMap["IRFMT"] {
 	case "C":
 		data := make([]int8, e.dataSize()/1)
-		readFile(e.dataPath, binary.BigEndian, &data)
+		readFile(e.dataPath, byteOrder, &data)
 		return data
 	case "S":
 		data := make([]int16, e.dataSize()/2)
-		readFile(e.dataPath, binary.BigEndian, &data)
+		readFile(e.dataPath, byteOrder, &data)
 		return data
 	case "I":
 		data := make([]int32, e.dataSize()/4)
-		readFile(e.dataPath, binary.BigEndian, &data)
+		readFile(e.dataPath, byteOrder, &data)
 		return data
 	case "F":
 		data := make([]float32, e.dataSize()/4)
-		readFile(e.dataPath, binary.BigEndian, &data)
+		readFile(e.dataPath, byteOrder, &data)
 		return data
 	case "D":
 		data := make([]float32, e.dataSize()/8)
-		readFile(e.dataPath, binary.BigEndian, &data)
+		readFile(e.dataPath, byteOrder, &data)
 		return data
 	case "A":
 		panic("Cannot read BES3T data in ASCII format!")
