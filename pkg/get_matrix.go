@@ -12,11 +12,21 @@ func readFile(filePath string, endian binary.ByteOrder, data interface{}) {
 		fmt.Println("error, cannot open a file")
 		panic(err)
 	}
-	defer file.Close()
 
 	err = binary.Read(file, endian, data)
 	if err != nil {
 		fmt.Println("error, cannot read binary")
 		panic(err)
 	}
+
+	file.Close()
+}
+
+func fileSize(filePath string) int64 {
+	info, err := os.Stat(filePath)
+	if err != nil {
+		panic(err)
+	}
+
+	return info.Size()
 }
