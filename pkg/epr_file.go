@@ -18,7 +18,7 @@ type eprFileMethod interface {
 type eprFile struct {
 	dataPath   string
 	cfgPath    string
-	cfgMap     map[string]string
+	cfg     map[string]string
 	fileFormat fileFormat
 	axes       axes
 }
@@ -90,15 +90,15 @@ func newEprFile(dataPath string, cfgPath string) *eprFile {
 	f := new(eprFile)
 	f.dataPath = dataPath
 	f.cfgPath = cfgPath
-	f.cfgMap = getCfg(f.cfgPath)
+	f.cfg = getCfg(f.cfgPath)
 	f.fileFormat = asumeFormat(f.dataPath)
-	f.axes = createAxes(f.cfgMap)
+	f.axes = createAxes(f.cfg)
 	return f
 }
 
 func (e *eprFile) getData() interface{} {
 	var byteOrder binary.ByteOrder
-	BSEQ, ok := e.cfgMap["BSEQ"]
+	BSEQ, ok := e.cfg["BSEQ"]
 	if !ok {
 		log.Println("Keyword BSEQ not found in .DSC file! Assuming BSEQ=BIG.")
 		byteOrder = binary.BigEndian
@@ -110,14 +110,14 @@ func (e *eprFile) getData() interface{} {
 		panic("Unknown value for keyword BSEQ in .DSC file!")
 	}
 
-	XPTS, ok := e.cfgMap["XPTS"]
+	XPTS, ok := e.cfg["XPTS"]
 	if !ok {
 		panic("No XPTS in DSC file.")
 	}
 	xPoints, _ := strconv.Atoi(XPTS)
 
 	// TODO: fix this if there is a better way
-	switch e.cfgMap["IRFMT"] {
+	switch e.cfg["IRFMT"] {
 	case "C":
 		data := make([]int8, xPoints)
 		getMatrix(e.dataPath, byteOrder, &data)

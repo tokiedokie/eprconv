@@ -22,14 +22,14 @@ func TestCreateAxisIDX(t *testing.T) {
 
 func TestCfgMap(t *testing.T) {
 	expect := "BIG"
-	actual := testEprFile.cfgMap["BSEQ"]
+	actual := testEprFile.cfg["BSEQ"]
 	assert.Equal(t, expect, actual)
 }
 
 func TestGetData(t *testing.T) {
-	testEprFile.cfgMap["BSEQ"] = "LIT"
+	testEprFile.cfg["BSEQ"] = "LIT"
 	data1 := testEprFile.getData()
-	testEprFile.cfgMap["BSEQ"] = "BIG"
+	testEprFile.cfg["BSEQ"] = "BIG"
 	data2 := testEprFile.getData()
 	assert.NotEqual(t, data1, data2)
 }
