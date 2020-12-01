@@ -8,8 +8,14 @@ var dataPath = "../test/data/bes3tint.dta"
 var cfgPath = "../test/data/bes3tint.dsc"
 var testEprFile = newEprFile(dataPath, cfgPath)
 
-func TestGetCfg(t *testing.T) {
-	cfgmap := testEprFile.getCfg()
+func TestAsumeFormat(t *testing.T) {
+	if brukerBES3T != asumeFormat("data.dta") {
+		t.Fatal()
+	}
+}
+
+func TestCfgMap(t *testing.T) {
+	cfgmap := testEprFile.cfgMap
 	if cfgmap["BSEQ"] != "BIG" {
 		t.Fatal()
 	}

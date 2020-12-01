@@ -5,12 +5,12 @@ import (
 	"encoding/binary"
 	"log"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
 type eprFileMethod interface {
 	getData()
-	getCfg()
 	dataSize() int64
 }
 
@@ -18,13 +18,47 @@ type eprFile struct {
 	dataPath string
 	cfgPath  string
 	cfgMap   map[string]string
+	fileFormat fileFormat
+}
+
+func asumeFormat(filePath string) fileFormat {
+	switch strings.ToLower(filepath.Ext(filePath)) {
+	case ".dta", ".dsc":
+		return brukerBES3T
+	}
+	panic("format is not supported")
+}
+
+func getCfg(cfgPath string) map[string]string {
+	cfgFile, _ := os.Open(cfgPath)
+	defer cfgFile.Close()
+
+	scanner := bufio.NewScanner(cfgFile)
+
+	cfgMap := make(map[string]string)
+
+	for scanner.Scan() {
+		text := scanner.Text()
+		if strings.HasPrefix(text, "#") || strings.HasPrefix(text, "*") {
+			continue
+		}
+		kv := strings.Fields(text)
+		if len(kv) < 2 {
+			cfgMap[kv[0]] = ""
+			continue
+		}
+		cfgMap[kv[0]] = kv[1]
+	}
+
+	return cfgMap
 }
 
 func newEprFile(dataPath string, cfgPath string) *eprFile {
 	f := new(eprFile)
 	f.dataPath = dataPath
 	f.cfgPath = cfgPath
-	f.cfgMap = f.getCfg()
+	f.cfgMap = getCfg(f.cfgPath)
+	f.fileFormat = asumeFormat(f.dataPath)
 	return f
 }
 
@@ -71,30 +105,6 @@ func (e *eprFile) getData() interface{} {
 	default:
 		panic("Unknown value for keyword IRFMT in .DSC file!")
 	}
-}
-
-func (e *eprFile) getCfg() map[string]string {
-	cfgFile, _ := os.Open(e.cfgPath)
-	defer cfgFile.Close()
-
-	scanner := bufio.NewScanner(cfgFile)
-
-	cfgMap := make(map[string]string)
-
-	for scanner.Scan() {
-		text := scanner.Text()
-		if strings.HasPrefix(text, "#") || strings.HasPrefix(text, "*") {
-			continue
-		}
-		kv := strings.Fields(text)
-		if len(kv) < 2 {
-			cfgMap[kv[0]] = ""
-			continue
-		}
-		cfgMap[kv[0]] = kv[1]
-	}
-
-	return cfgMap
 }
 
 func (e *eprFile) dataSize() int64 {

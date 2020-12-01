@@ -1,10 +1,5 @@
 package pkg
 
-import (
-	"path/filepath"
-	"strings"
-)
-
 type fileFormat int
 
 const (
@@ -18,14 +13,6 @@ func EprLoad(filePath string) {
 	default:
 		panic("cannot load a epr file")
 	}
-}
-
-func asumeFormat(filePath string) fileFormat {
-	switch strings.ToLower(filepath.Ext(filePath)) {
-	case ".dta", ".dsc":
-		return brukerBES3T
-	}
-	panic("format is not supported")
 }
 
 func loadBrukerBES3T(filePath string) {
