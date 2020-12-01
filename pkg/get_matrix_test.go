@@ -6,18 +6,16 @@ import (
 )
 
 func TestReadOneByte(t *testing.T) {
-	path := "../test/data/bes3tint.dta"
 	var data int32
-	readFile(path, binary.BigEndian, &data)
+	readFile(dataPath, binary.BigEndian, &data)
 	if data != -40 {
 		t.Fatal()
 	}
 }
 
 func TestReadFile(t *testing.T) {
-	path := "../test/data/bes3tint.dta"
-	eprFile := newEprFileInt32(path)
+	eprFile := newEprFileInt32(dataPath, cfgPath)
 	bufSize := eprFile.dataSize()/4
 	data := make([]int32, bufSize)
-	readFile(path, binary.BigEndian, &data)
+	readFile(dataPath, binary.BigEndian, &data)
 }
