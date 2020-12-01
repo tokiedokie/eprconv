@@ -46,23 +46,23 @@ func (e *eprFile) getData() interface{} {
 	switch e.cfgMap["IRFMT"] {
 	case "C":
 		data := make([]int8, e.dataSize()/1)
-		readFile(e.dataPath, byteOrder, &data)
+		getMatrix(e.dataPath, byteOrder, &data)
 		return data
 	case "S":
 		data := make([]int16, e.dataSize()/2)
-		readFile(e.dataPath, byteOrder, &data)
+		getMatrix(e.dataPath, byteOrder, &data)
 		return data
 	case "I":
 		data := make([]int32, e.dataSize()/4)
-		readFile(e.dataPath, byteOrder, &data)
+		getMatrix(e.dataPath, byteOrder, &data)
 		return data
 	case "F":
 		data := make([]float32, e.dataSize()/4)
-		readFile(e.dataPath, byteOrder, &data)
+		getMatrix(e.dataPath, byteOrder, &data)
 		return data
 	case "D":
 		data := make([]float32, e.dataSize()/8)
-		readFile(e.dataPath, byteOrder, &data)
+		getMatrix(e.dataPath, byteOrder, &data)
 		return data
 	case "A":
 		panic("Cannot read BES3T data in ASCII format!")
