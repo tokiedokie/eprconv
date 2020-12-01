@@ -28,6 +28,7 @@ func newEprFile(dataPath string, cfgPath string) *eprFile {
 }
 
 func (e *eprFile) getData() interface{} {
+	// TODO: fix this if there is a better way
 	switch e.cfgMap["IRFMT"] {
 		case "C":
 			data := make([]int8, e.dataSize()/1)
@@ -51,8 +52,10 @@ func (e *eprFile) getData() interface{} {
 			return data
 		case "A":
 			panic("Cannot read BES3T data in ASCII format!")
+		case "0", "N":
+			panic("No BES3T data!")
 		default:
-			panic("something wrong")
+			panic("Unknown value for keyword IRFMT in .DSC file!")
 	}
 }
 
