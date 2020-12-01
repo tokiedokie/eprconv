@@ -16,7 +16,8 @@ func TestReadOneByte(t *testing.T) {
 
 func TestReadFile(t *testing.T) {
 	path := "../test/data/bes3tint.dta"
-	bufSize := fileSize(path)/4 // dividing by 4 because int32 has 4 bytes.
+	eprFile := newEprFileInt32(path)
+	bufSize := eprFile.dataSize()/4
 	data := make([]int32, bufSize)
 	readFile(path, binary.BigEndian, &data)
 }

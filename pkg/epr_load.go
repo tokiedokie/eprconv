@@ -19,7 +19,7 @@ func (f fileFormat) String() string {
 func EprLoad(filePath string) {
 	switch asumeFormat(filePath) {
 		case brukerBES3T:
-			loadBrukerBES3T()
+			loadBrukerBES3T(filePath)
 		default:
 			panic("cannot load a epr file")
 	}
@@ -33,6 +33,6 @@ func asumeFormat(filePath string) fileFormat {
 	panic("format is not supported")
 }
 
-func loadBrukerBES3T() {
-
+func loadBrukerBES3T(filePath string) {
+	// fint8 := newEprFileInt8(filePath)
 }
