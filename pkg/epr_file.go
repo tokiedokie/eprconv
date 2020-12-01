@@ -29,8 +29,6 @@ func newEprFile(dataPath string, cfgPath string) *eprFile {
 }
 
 func (e *eprFile) getData() interface{} {
-	// TODO: fix this if there is a better way
-
 	var byteOrder binary.ByteOrder
 	BSEQ, ok := e.cfgMap["BSEQ"]
 	if !ok {
@@ -44,6 +42,7 @@ func (e *eprFile) getData() interface{} {
 		panic("Unknown value for keyword BSEQ in .DSC file!")
 	}
 
+	// TODO: fix this if there is a better way
 	switch e.cfgMap["IRFMT"] {
 	case "C":
 		data := make([]int8, e.dataSize()/1)
