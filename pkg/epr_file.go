@@ -16,41 +16,44 @@ type eprFileMethod interface {
 type eprFile struct {
 	dataPath string
 	cfgPath string
+	cfgMap map[string]string
 }
 
-type eprFileInt8 struct {
-	eprFile
-}
-
-type eprFileInt32 struct {
-	eprFile
-}
-
-func newEprFileInt8(dataPath string) *eprFileInt8 {
-	f := new(eprFileInt8)
-	f.dataPath = dataPath
-	return f
-}
-
-func newEprFileInt32(dataPath string, cfgPath string) *eprFileInt32 {
-	f := new(eprFileInt32)
+func newEprFile(dataPath string, cfgPath string) *eprFile {
+	f := new(eprFile)
 	f.dataPath = dataPath
 	f.cfgPath = cfgPath
+	f.cfgMap = f.getCfg()
 	return f
 }
 
-func (e *eprFileInt8) getData() []int8 {
-	bufSize := e.dataSize()/1 // dividing by 4 because int8 has 1 byte.
-	data := make([]int8, bufSize)
-	readFile(e.dataPath, binary.BigEndian, &data)
-	return data
-}
-
-func (e *eprFileInt32) getData() []int32 {
-	bufSize := e.dataSize()/4 // dividing by 4 because int8 has 4 byte.
-	data := make([]int32, bufSize)
-	readFile(e.dataPath, binary.BigEndian, &data)
-	return data
+func (e *eprFile) getData() interface{} {
+	switch e.cfgMap["IRFMT"] {
+		case "C":
+			data := make([]int8, e.dataSize()/1)
+			readFile(e.dataPath, binary.BigEndian, &data)
+			return data
+		case "S":
+			data := make([]int16, e.dataSize()/2)
+			readFile(e.dataPath, binary.BigEndian, &data)
+			return data
+		case "I":
+			data := make([]int32, e.dataSize()/4)
+			readFile(e.dataPath, binary.BigEndian, &data)
+			return data
+		case "F":
+			data := make([]float32, e.dataSize()/4)
+			readFile(e.dataPath, binary.BigEndian, &data)
+			return data
+		case "D":
+			data := make([]float32, e.dataSize()/8)
+			readFile(e.dataPath, binary.BigEndian, &data)
+			return data
+		case "A":
+			panic("Cannot read BES3T data in ASCII format!")
+		default:
+			panic("something wrong")
+	}
 }
 
 func (e *eprFile) getCfg() map[string]string {
