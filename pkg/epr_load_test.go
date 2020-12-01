@@ -7,3 +7,8 @@ func TestAsumeFormat(t *testing.T) {
 		t.Fatal()
 	}
 }
+
+func TestLoadBrukerBES3T(t *testing.T) {
+	path := "../test/data/bes3tint.dta"
+	loadBrukerBES3T(path)
+}

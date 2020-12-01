@@ -21,12 +21,3 @@ func readFile(filePath string, endian binary.ByteOrder, data interface{}) {
 
 	file.Close()
 }
-
-func fileSize(filePath string) int64 {
-	info, err := os.Stat(filePath)
-	if err != nil {
-		panic(err)
-	}
-
-	return info.Size()
-}
