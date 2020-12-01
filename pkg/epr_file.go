@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 )
 
@@ -19,6 +20,13 @@ type eprFile struct {
 	cfgPath    string
 	cfgMap     map[string]string
 	fileFormat fileFormat
+	axes       axes
+}
+
+type axes struct {
+	x []float64
+	y []float64
+	z []float64
 }
 
 func asumeFormat(filePath string) fileFormat {
@@ -53,12 +61,38 @@ func getCfg(cfgPath string) map[string]string {
 	return cfgMap
 }
 
+func createAxes(cfgMap map[string]string) axes {
+	axes := new(axes)
+
+	// maybe we should use float64 for `MIN` and `WID`
+	xPts, _ := strconv.Atoi(cfgMap["XPTS"])
+	xMin, _ := strconv.Atoi(cfgMap["XMIN"])
+	xWid, _ := strconv.Atoi(cfgMap["XWID"])
+	switch cfgMap["XTYP"] {
+	case "IDX":
+		axes.x = createAxisIDX(xPts, xMin, xWid)
+	}
+
+	return *axes
+}
+
+func createAxisIDX(points, min, width int) []float64 {
+	abscissa := make([]float64, points)
+	minFloat := float64(min)
+	widthFloat := float64(width)
+	for i := 0; i < points; i++ {
+		abscissa[i] = minFloat + widthFloat/float64(points-1)*float64(i)
+	}
+	return abscissa
+}
+
 func newEprFile(dataPath string, cfgPath string) *eprFile {
 	f := new(eprFile)
 	f.dataPath = dataPath
 	f.cfgPath = cfgPath
 	f.cfgMap = getCfg(f.cfgPath)
 	f.fileFormat = asumeFormat(f.dataPath)
+	f.axes = createAxes(f.cfgMap)
 	return f
 }
 
@@ -76,26 +110,32 @@ func (e *eprFile) getData() interface{} {
 		panic("Unknown value for keyword BSEQ in .DSC file!")
 	}
 
+	XPTS, ok := e.cfgMap["XPTS"]
+	if !ok {
+		panic("No XPTS in DSC file.")
+	}
+	xPoints, _ := strconv.Atoi(XPTS)
+
 	// TODO: fix this if there is a better way
 	switch e.cfgMap["IRFMT"] {
 	case "C":
-		data := make([]int8, e.dataSize()/1)
+		data := make([]int8, xPoints)
 		getMatrix(e.dataPath, byteOrder, &data)
 		return data
 	case "S":
-		data := make([]int16, e.dataSize()/2)
+		data := make([]int16, xPoints)
 		getMatrix(e.dataPath, byteOrder, &data)
 		return data
 	case "I":
-		data := make([]int32, e.dataSize()/4)
+		data := make([]int32, xPoints)
 		getMatrix(e.dataPath, byteOrder, &data)
 		return data
 	case "F":
-		data := make([]float32, e.dataSize()/4)
+		data := make([]float32, xPoints)
 		getMatrix(e.dataPath, byteOrder, &data)
 		return data
 	case "D":
-		data := make([]float32, e.dataSize()/8)
+		data := make([]float32, xPoints)
 		getMatrix(e.dataPath, byteOrder, &data)
 		return data
 	case "A":
