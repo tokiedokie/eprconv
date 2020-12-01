@@ -3,14 +3,14 @@ package pkg
 import (
 	"encoding/binary"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestReadOneByte(t *testing.T) {
 	var data int32
 	readFile(dataPath, binary.BigEndian, &data)
-	if data != -40 {
-		t.Fatal()
-	}
+	assert.Equal(t, data, -40)
 }
 
 func TestReadFile(t *testing.T) {

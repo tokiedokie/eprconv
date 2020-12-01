@@ -11,22 +11,19 @@ var cfgPath = "../test/data/bes3tint.dsc"
 var testEprFile = newEprFile(dataPath, cfgPath)
 
 func TestAsumeFormat(t *testing.T) {
-	if brukerBES3T != asumeFormat("data.dta") {
-		t.Fatal()
-	}
+	assert.Equal(t, brukerBES3T, asumeFormat("data.dta"))
 }
 
 func TestCreateAxisIDX(t *testing.T) {
 	expect := []float64{0, 2, 4, 6}
-	result := createAxisIDX(4, 0, 6)
-	assert.Equal(t, result, expect)
+	actual := createAxisIDX(4, 0, 6)
+	assert.Equal(t, expect, actual)
 }
 
 func TestCfgMap(t *testing.T) {
-	cfgmap := testEprFile.cfgMap
-	if cfgmap["BSEQ"] != "BIG" {
-		t.Fatal()
-	}
+	expect := "BIG"
+	actual := testEprFile.cfgMap["BSEQ"]
+	assert.Equal(t, expect, actual)
 }
 
 func TestGetData(t *testing.T) {
