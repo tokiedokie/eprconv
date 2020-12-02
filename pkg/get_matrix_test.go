@@ -14,7 +14,7 @@ func TestReadOneByte(t *testing.T) {
 }
 
 func TestReadFile(t *testing.T) {
-	eprFile := newEprFile(dataPath, cfgPath)
+	eprFile := NewEprFile(dataPath, cfgPath)
 	bufSize := eprFile.dataSize() / 4
 	data := make([]int32, bufSize)
 	readFile(dataPath, binary.BigEndian, &data)
