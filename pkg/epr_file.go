@@ -5,7 +5,6 @@ import (
 	"encoding/binary"
 	"log"
 	"os"
-	"path/filepath"
 	"reflect"
 	"strconv"
 	"strings"
@@ -28,14 +27,6 @@ type axes struct {
 	x []float64
 	y []float64
 	z []float64
-}
-
-func asumeFormat(filePath string) fileFormat {
-	switch strings.ToLower(filepath.Ext(filePath)) {
-	case ".dta", ".dsc":
-		return brukerBES3T
-	}
-	panic("format is not supported")
 }
 
 func getCfg(cfgPath string) map[string]string {
@@ -87,7 +78,7 @@ func createAxisIDX(points, min, width int) []float64 {
 	return abscissa
 }
 
-func newEprFile(dataPath string, cfgPath string) *eprFile {
+func NewEprFile(dataPath string, cfgPath string) *eprFile {
 	f := new(eprFile)
 	f.dataPath = dataPath
 	f.cfgPath = cfgPath

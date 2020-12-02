@@ -8,7 +8,7 @@ import (
 
 var dataPath = "../test/data/bes3tint.dta"
 var cfgPath = "../test/data/bes3tint.dsc"
-var testEprFile = newEprFile(dataPath, cfgPath)
+var testEprFile = NewEprFile(dataPath, cfgPath)
 
 func TestAsumeFormat(t *testing.T) {
 	assert.Equal(t, brukerBES3T, asumeFormat("data.dta"))
