@@ -12,7 +12,7 @@ func output(path string, eprFile eprFile) {
 	}
 	defer file.Close()
 
-	data, _ := eprFile.getData().([]int32)
+	data := eprFile.getData()
 
 	for i := 0; i < len(eprFile.axes.x); i++ {
 		fmt.Fprintln(file, eprFile.axes.x[i], data[i])

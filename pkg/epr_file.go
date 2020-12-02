@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"reflect"
 	"strconv"
 	"strings"
 )
@@ -18,7 +19,7 @@ type eprFileMethod interface {
 type eprFile struct {
 	dataPath   string
 	cfgPath    string
-	cfg     map[string]string
+	cfg        map[string]string
 	fileFormat fileFormat
 	axes       axes
 }
@@ -96,7 +97,7 @@ func newEprFile(dataPath string, cfgPath string) *eprFile {
 	return f
 }
 
-func (e *eprFile) getData() interface{} {
+func (e *eprFile) getData() []float64 {
 	var byteOrder binary.ByteOrder
 	BSEQ, ok := e.cfg["BSEQ"]
 	if !ok {
@@ -116,28 +117,18 @@ func (e *eprFile) getData() interface{} {
 	}
 	xPoints, _ := strconv.Atoi(XPTS)
 
-	// TODO: fix this if there is a better way
+	var t reflect.Type
 	switch e.cfg["IRFMT"] {
 	case "C":
-		data := make([]int8, xPoints)
-		getMatrix(e.dataPath, byteOrder, &data)
-		return data
+		t = reflect.TypeOf(int8(0))
 	case "S":
-		data := make([]int16, xPoints)
-		getMatrix(e.dataPath, byteOrder, &data)
-		return data
+		t = reflect.TypeOf(int16(0))
 	case "I":
-		data := make([]int32, xPoints)
-		getMatrix(e.dataPath, byteOrder, &data)
-		return data
+		t = reflect.TypeOf(int32(0))
 	case "F":
-		data := make([]float32, xPoints)
-		getMatrix(e.dataPath, byteOrder, &data)
-		return data
+		t = reflect.TypeOf(float32(0))
 	case "D":
-		data := make([]float32, xPoints)
-		getMatrix(e.dataPath, byteOrder, &data)
-		return data
+		t = reflect.TypeOf(float64(0))
 	case "A":
 		panic("Cannot read BES3T data in ASCII format!")
 	case "0", "N":
@@ -145,6 +136,8 @@ func (e *eprFile) getData() interface{} {
 	default:
 		panic("Unknown value for keyword IRFMT in .DSC file!")
 	}
+
+	return getMatrix(e.dataPath, byteOrder, reflect.ArrayOf(xPoints, t))
 }
 
 func (e *eprFile) dataSize() int64 {
