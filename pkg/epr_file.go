@@ -29,8 +29,11 @@ type axes struct {
 	z []float64
 }
 
-func getCfg(cfgPath string) map[string]string {
-	cfgFile, _ := os.Open(cfgPath)
+func getCfg(cfgPath string) (map[string]string, error) {
+	cfgFile, err := os.Open(cfgPath)
+	if err != nil {
+		return make(map[string]string), err
+	}
 	defer cfgFile.Close()
 
 	scanner := bufio.NewScanner(cfgFile)
@@ -50,22 +53,31 @@ func getCfg(cfgPath string) map[string]string {
 		cfgMap[kv[0]] = kv[1]
 	}
 
-	return cfgMap
+	return cfgMap, nil
 }
 
-func createAxes(cfgMap map[string]string) axes {
+func createAxes(cfgMap map[string]string) (axes, error) {
 	axes := new(axes)
 
 	// maybe we should use float64 for `MIN` and `WID`
-	xPts, _ := strconv.Atoi(cfgMap["XPTS"])
-	xMin, _ := strconv.Atoi(cfgMap["XMIN"])
-	xWid, _ := strconv.Atoi(cfgMap["XWID"])
+	xPts, err := strconv.Atoi(cfgMap["XPTS"])
+	if err != nil {
+		return *axes, err
+	}
+	xMin, err := strconv.Atoi(cfgMap["XMIN"])
+	if err != nil {
+		return *axes, err
+	}
+	xWid, err := strconv.Atoi(cfgMap["XWID"])
+	if err != nil {
+		return *axes, err
+	}
 	switch cfgMap["XTYP"] {
 	case "IDX":
 		axes.x = createAxisIDX(xPts, xMin, xWid)
 	}
 
-	return *axes
+	return *axes, nil
 }
 
 func createAxisIDX(points, min, width int) []float64 {
@@ -78,17 +90,24 @@ func createAxisIDX(points, min, width int) []float64 {
 	return abscissa
 }
 
-func NewEprFile(dataPath string, cfgPath string) *eprFile {
+func NewEprFile(dataPath string, cfgPath string) (*eprFile, error) {
+	var err error
 	f := new(eprFile)
 	f.dataPath = dataPath
 	f.cfgPath = cfgPath
-	f.cfg = getCfg(f.cfgPath)
+	f.cfg, err = getCfg(f.cfgPath)
+	if err != nil {
+		return f, err
+	}
 	f.fileFormat = asumeFormat(f.dataPath)
-	f.axes = createAxes(f.cfg)
-	return f
+	f.axes, err = createAxes(f.cfg)
+	if err != nil {
+		return f, err
+	}
+	return f, nil
 }
 
-func (e *eprFile) getData() []float64 {
+func (e *eprFile) getData() ([]float64, error) {
 	var byteOrder binary.ByteOrder
 	BSEQ, ok := e.cfg["BSEQ"]
 	if !ok {
@@ -106,7 +125,10 @@ func (e *eprFile) getData() []float64 {
 	if !ok {
 		panic("No XPTS in DSC file.")
 	}
-	xPoints, _ := strconv.Atoi(XPTS)
+	xPoints, err := strconv.Atoi(XPTS)
+	if err != nil {
+		return make([]float64, 0), err
+	}
 
 	var t reflect.Type
 	switch e.cfg["IRFMT"] {
@@ -128,13 +150,13 @@ func (e *eprFile) getData() []float64 {
 		panic("Unknown value for keyword IRFMT in .DSC file!")
 	}
 
-	return getMatrix(e.dataPath, byteOrder, reflect.ArrayOf(xPoints, t))
+	return getMatrix(e.dataPath, byteOrder, reflect.ArrayOf(xPoints, t)), nil
 }
 
-func (e *eprFile) dataSize() int64 {
+func (e *eprFile) dataSize() (int64, error) {
 	info, err := os.Stat(e.dataPath)
 	if err != nil {
-		panic(err)
+		return 0, err
 	}
-	return info.Size()
+	return info.Size(), nil
 }

@@ -7,6 +7,6 @@ import (
 
 func main() {
 	c, d, o := args.Parse()	
-	epr := pkg.NewEprFile(*d, *c)
+	epr, _ := pkg.NewEprFile(*d, *c)
 	pkg.Output(*o, *epr)
 }

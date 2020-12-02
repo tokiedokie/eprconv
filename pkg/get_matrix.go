@@ -2,7 +2,6 @@ package pkg
 
 import (
 	"encoding/binary"
-	"fmt"
 	"os"
 	"reflect"
 )
@@ -13,19 +12,18 @@ func getMatrix(filePath string, byteOrder binary.ByteOrder, arrayType reflect.Ty
 	return arrayInterfaceToFloat64(data)
 }
 
-func readFile(filePath string, byteOrder binary.ByteOrder, data interface{}) {
+func readFile(filePath string, byteOrder binary.ByteOrder, data interface{}) error {
 	file, err := os.Open(filePath)
 	if err != nil {
-		fmt.Println("error, cannot open a file")
-		panic(err)
+		return err
 	}
 	defer file.Close()
 
 	err = binary.Read(file, byteOrder, data)
 	if err != nil {
-		fmt.Println("error, cannot read binary")
-		panic(err)
+		return err
 	}
+	return nil
 }
 
 func arrayInterfaceToFloat64(input interface{}) []float64 {
