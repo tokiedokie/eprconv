@@ -13,7 +13,7 @@ Please feel free to open issue/PR
 ```sh
 git clone https://github.com/tokiedokie/eprconv
 cd eprconv
-go build -v -o dist/eprconv eprconv/cmd
+go build -o dist/eprconv eprconv/cmd
 ```
 
 output is located in dist/eprconv
