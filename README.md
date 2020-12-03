@@ -2,7 +2,7 @@
 
 eprconv converts Bruker's binary file into text one
 
-[EasySpin](https://easyspin.org/) has similar feature, but they need to use MATLAB which is not free/open source, so I create this software
+[EasySpin](https://easyspin.org/) has similar features, but it needs to use MATLAB which is not free/open source, so I create this software
 
 This is still unstable
 
