@@ -8,11 +8,11 @@ import (
 
 func getMatrix(filePath string, byteOrder binary.ByteOrder, arrayType reflect.Type) []float64 {
 	data := reflect.New(arrayType).Interface()
-	readFile(filePath, byteOrder, data)
+	readBinaryFile(filePath, byteOrder, data)
 	return arrayInterfaceToFloat64(data)
 }
 
-func readFile(filePath string, byteOrder binary.ByteOrder, data interface{}) error {
+func readBinaryFile(filePath string, byteOrder binary.ByteOrder, data interface{}) error {
 	file, err := os.Open(filePath)
 	if err != nil {
 		return err
