@@ -1,8 +1,8 @@
 package pkg
 
 import (
+	"errors"
 	"fmt"
-	"io/ioutil"
 	"path/filepath"
 	"strings"
 )
@@ -24,20 +24,31 @@ func asumeFormat(filePath string) fileFormat {
 func EprLoad(filePath string) {
 }
 
-func getDataCfgPath(filePath string) (dataPath, cfgPath string) {
+func getDataCfgPath(filePath string) (dataPath, cfgPath string, err error) {
 	if filepath.Ext(filePath) == "" {
-		dir, _ := filepath.Split(filePath)
-		fileInfos, _ := ioutil.ReadDir(dir)
-		for _, fileInfo := range fileInfos {
-			fmt.Println(fileInfo.Name())
+		pattern := fmt.Sprint(filePath, ".*")
+		matchedFiles, globErr := filepath.Glob(pattern)
+		if globErr != nil {
+			err = globErr
+			return
 		}
-
-		// get file path with an extention
-		// if no files found, then throw error
+		// if there is no format(e.g. BrukerBES3T) that needs one file
+		// we should update if statement below
+		if len(matchedFiles) == 0 {  
+			err = errors.New("No such file")
+			return
+		}
+		for _, file := range matchedFiles {
+			switch strings.ToLower(filepath.Ext(file)) {
+			case ".dta":
+				dataPath = file
+			case ".dsc":
+				cfgPath = file
+			default:
+				err = errors.New("file extension does not match")
+				return
+			}
+		}
 	}
-	switch asumeFormat(filePath) {
-
-	}
-
 	return
 }
