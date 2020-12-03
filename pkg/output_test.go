@@ -1,7 +1,16 @@
 package pkg
 
-import "testing"
+import (
+	"io/ioutil"
+	"os"
+	"testing"
+)
+
+
 
 func TestOutput(t *testing.T) {
-	Output("../tmp", *testEprFile)
+	tmpFile, _ := ioutil.TempFile("", "test.txt")
+	defer os.Remove(tmpFile.Name())
+	
+	Output(tmpFile.Name(), *testEprFile)
 }
