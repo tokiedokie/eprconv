@@ -35,7 +35,7 @@ func TestGetData(t *testing.T) {
 }
 
 func TestNumberOfData(t *testing.T) {
-	data,  _:= testEprFile.getData()
+	data, _ := testEprFile.getData()
 	data1 := len(data)
 	data2 := len(testEprFile.axes.x)
 	assert.Equal(t, data1, data2)

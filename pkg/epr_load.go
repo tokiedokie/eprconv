@@ -31,15 +31,13 @@ func getDataCfgPath(filePath string) (dataPath, cfgPath string) {
 		for _, fileInfo := range fileInfos {
 			fmt.Println(fileInfo.Name())
 		}
-	
+
 		// get file path with an extention
 		// if no files found, then throw error
 	}
 	switch asumeFormat(filePath) {
 
 	}
-
-
 
 	return
 }
