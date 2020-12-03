@@ -1,8 +1,8 @@
 package main
 
 import (
-	"eprconv/pkg"
-	"eprconv/pkg/args"
+	"eprconv/internal"
+	"eprconv/internal/args"
 	"fmt"
 	"os"
 )
@@ -13,10 +13,10 @@ func main() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	epr, err := pkg.NewEprFile(*d, *c)
+	epr, err := internal.NewEprFile(*d, *c)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	pkg.Output(*o, *epr)
+	internal.Output(*o, *epr)
 }
