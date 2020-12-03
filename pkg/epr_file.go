@@ -1,4 +1,4 @@
-package internal
+package pkg
 
 import (
 	"bufio"
@@ -15,18 +15,18 @@ type eprFileMethod interface {
 	dataSize() int64
 }
 
-type eprFile struct {
+type EprFile struct {
 	dataPath   string
 	cfgPath    string
 	cfg        map[string]string
 	fileFormat fileFormat
-	axes       axes
+	Axes       axes
 }
 
 type axes struct {
-	x []float64
-	y []float64
-	z []float64
+	X []float64
+	Y []float64
+	Z []float64
 }
 
 func getCfg(cfgPath string) (map[string]string, error) {
@@ -74,7 +74,7 @@ func createAxes(cfgMap map[string]string) (axes, error) {
 	}
 	switch cfgMap["XTYP"] {
 	case "IDX":
-		axes.x = createAxisIDX(xPts, xMin, xWid)
+		axes.X = createAxisIDX(xPts, xMin, xWid)
 	}
 
 	return *axes, nil
@@ -90,9 +90,9 @@ func createAxisIDX(points, min, width int) []float64 {
 	return abscissa
 }
 
-func NewEprFile(dataPath string, cfgPath string) (*eprFile, error) {
+func NewEprFile(dataPath string, cfgPath string) (*EprFile, error) {
 	var err error
-	f := new(eprFile)
+	f := new(EprFile)
 	f.dataPath = dataPath
 	f.cfgPath = cfgPath
 	f.cfg, err = getCfg(f.cfgPath)
@@ -100,14 +100,14 @@ func NewEprFile(dataPath string, cfgPath string) (*eprFile, error) {
 		return f, err
 	}
 	f.fileFormat = asumeFormat(f.dataPath)
-	f.axes, err = createAxes(f.cfg)
+	f.Axes, err = createAxes(f.cfg)
 	if err != nil {
 		return f, err
 	}
 	return f, nil
 }
 
-func (e *eprFile) getData() ([]float64, error) {
+func (e *EprFile) GetData() ([]float64, error) {
 	var byteOrder binary.ByteOrder
 	BSEQ, ok := e.cfg["BSEQ"]
 	if !ok {
@@ -153,7 +153,7 @@ func (e *eprFile) getData() ([]float64, error) {
 	return getMatrix(e.dataPath, byteOrder, reflect.ArrayOf(xPoints, t)), nil
 }
 
-func (e *eprFile) dataSize() (int64, error) {
+func (e *EprFile) dataSize() (int64, error) {
 	info, err := os.Stat(e.dataPath)
 	if err != nil {
 		return 0, err

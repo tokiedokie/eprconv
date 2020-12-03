@@ -1,4 +1,4 @@
-package internal
+package pkg
 
 import (
 	"encoding/binary"
@@ -6,6 +6,9 @@ import (
 
 	"github.com/stretchr/testify/assert"
 )
+
+var dataPath = "../test/data/bes3tint.dta"
+var cfgPath = "../test/data/bes3tint.dsc"
 
 func TestReadOneByte(t *testing.T) {
 	var data int32
