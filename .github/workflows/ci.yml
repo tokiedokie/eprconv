@@ -5,8 +5,12 @@ on: [push, pull_request]
 jobs:
 
   build:
-    name: Build
-    runs-on: ubuntu-latest
+    name: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macOS-latest, ubuntu-latest, windows-latest]
+
+    runs-on: ${{ matrix.os }}
     steps:
 
     - name: Set up Go 1.x
