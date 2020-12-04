@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
+	"eprconv/internal"
 	"eprconv/internal/args"
-	"eprconv/pkg"
 	"eprconv/pkg/output"
 )
 
@@ -15,7 +15,7 @@ func main() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	epr, err := pkg.EprLoad(parsedArgs)
+	epr, err := internal.EprLoad(parsedArgs)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)

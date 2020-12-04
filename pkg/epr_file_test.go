@@ -6,10 +6,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestAsumeFormat(t *testing.T) {
-	assert.Equal(t, brukerBES3T, asumeFormat("data.dta"))
-}
-
 func TestCreateAxisIDX(t *testing.T) {
 	expect := []float64{0, 2, 4, 6}
 	actual := createAxisIDX(4, 0, 6)

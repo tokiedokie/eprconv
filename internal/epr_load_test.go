@@ -1,10 +1,14 @@
-package pkg
+package internal
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
+
+func TestAsumeFormat(t *testing.T) {
+	assert.Equal(t, brukerBES3T, asumeFormat("data.dta"))
+}
 
 func TestGetDataCfgPath(t *testing.T) {
 	dp, cp, _ := getDataCfgPath("../test/data/bes3tint.dta")

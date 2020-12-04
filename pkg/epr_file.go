@@ -16,11 +16,10 @@ type eprFileMethod interface {
 }
 
 type EprFile struct {
-	dataPath   string
-	cfgPath    string
-	cfg        map[string]string
-	fileFormat fileFormat
-	Axes       axes
+	dataPath string
+	cfgPath  string
+	cfg      map[string]string
+	Axes     axes
 }
 
 type axes struct {
@@ -99,7 +98,6 @@ func NewEprFile(dataPath string, cfgPath string) (*EprFile, error) {
 	if err != nil {
 		return f, err
 	}
-	f.fileFormat = asumeFormat(f.dataPath)
 	f.Axes, err = createAxes(f.cfg)
 	if err != nil {
 		return f, err

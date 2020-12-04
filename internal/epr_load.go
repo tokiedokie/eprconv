@@ -1,4 +1,4 @@
-package pkg
+package internal
 
 import (
 	"errors"
@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"eprconv/internal/args"
+	"eprconv/pkg"
 )
 
 type fileFormat int
@@ -23,9 +24,9 @@ func asumeFormat(filePath string) fileFormat {
 	panic("format is not supported")
 }
 
-func EprLoad(parsedArgs args.ParsedArgs) (*EprFile, error) {
+func EprLoad(parsedArgs args.ParsedArgs) (*pkg.EprFile, error) {
 	if parsedArgs.CfgPath != "" && parsedArgs.DataPath != "" {
-		return NewEprFile(parsedArgs.DataPath, parsedArgs.CfgPath)
+		return pkg.NewEprFile(parsedArgs.DataPath, parsedArgs.CfgPath)
 	}
 	return nil, nil
 }
