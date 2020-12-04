@@ -3,6 +3,7 @@ package pkg
 import (
 	"bufio"
 	"encoding/binary"
+	"errors"
 	"log"
 	"os"
 	"reflect"
@@ -60,15 +61,15 @@ func createAxes(cfgMap map[string]string) (axes, error) {
 	// maybe we should use float64 for `MIN` and `WID`
 	xPts, err := strconv.Atoi(cfgMap["XPTS"])
 	if err != nil {
-		return *axes, err
+		return *axes, errors.New("cannot find XPTS")
 	}
 	xMin, err := strconv.ParseFloat(cfgMap["XMIN"], 64)
 	if err != nil {
-		return *axes, err
+		return *axes, errors.New("cannot find XMIN")
 	}
 	xWid, err := strconv.ParseFloat(cfgMap["XWID"], 64)
 	if err != nil {
-		return *axes, err
+		return *axes, errors.New("cannot find XWID")
 	}
 	switch cfgMap["XTYP"] {
 	case "IDX":
