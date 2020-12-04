@@ -6,6 +6,7 @@ import (
 )
 
 type ParsedArgs struct {
+	FilePath   string
 	CfgPath    string
 	DataPath   string
 	OutputPath string
@@ -18,15 +19,17 @@ func Parse() (parsedArgs ParsedArgs, err error) {
 
 	flag.Parse()
 
-	if *c == "" {
+	filePath := flag.Arg(0)
+	if *c == "" && filePath == "" {
 		err = errors.New("Configuration file must be specified")
-	} else if *d == "" {
+	} else if *d == "" && filePath == "" {
 		err = errors.New("Data file must be specified")
 	} else if *o == "" {
 		err = errors.New("Output file must be specified")
 	}
 
 	return ParsedArgs{
+		FilePath:   filePath,
 		CfgPath:    *c,
 		DataPath:   *d,
 		OutputPath: *o,

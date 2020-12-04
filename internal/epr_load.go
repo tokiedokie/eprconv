@@ -28,7 +28,11 @@ func EprLoad(parsedArgs args.ParsedArgs) (*pkg.EprFile, error) {
 	if parsedArgs.CfgPath != "" && parsedArgs.DataPath != "" {
 		return pkg.NewEprFile(parsedArgs.DataPath, parsedArgs.CfgPath)
 	}
-	return nil, nil
+	dataPath, cfgPath, err := getDataCfgPath(parsedArgs.FilePath)
+	if err != nil {
+		return nil, err
+	}
+	return pkg.NewEprFile(dataPath, cfgPath)
 }
 
 func getDataCfgPath(filePath string) (dataPath, cfgPath string, err error) {
