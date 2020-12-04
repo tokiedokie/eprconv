@@ -20,5 +20,5 @@ func main() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	err = output.Output(*parsedArgs.OutputPath, *epr)
+	err = output.Output(parsedArgs.OutputPath, *epr)
 }
