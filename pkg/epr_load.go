@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"path/filepath"
 	"strings"
+
+	"eprconv/internal/args"
 )
 
 type fileFormat int
@@ -21,33 +23,33 @@ func asumeFormat(filePath string) fileFormat {
 	panic("format is not supported")
 }
 
-func EprLoad(filePath string) {
+func EprLoad(parsedArgs args.ParsedArgs) (*EprFile, error) {
+	if *parsedArgs.CfgPath != "" && *parsedArgs.DataPath!= "" {
+		return NewEprFile(*parsedArgs.DataPath, *parsedArgs.CfgPath)
+	}
+	return nil, nil
 }
 
 func getDataCfgPath(filePath string) (dataPath, cfgPath string, err error) {
-	if filepath.Ext(filePath) == "" {
-		pattern := fmt.Sprint(filePath, ".*")
-		matchedFiles, globErr := filepath.Glob(pattern)
-		if globErr != nil {
-			err = globErr
+	filePathWithoutExt := strings.TrimSuffix(filePath, filepath.Ext(filePath))
+	pattern := fmt.Sprint(filePathWithoutExt, ".*")
+	matchedFiles, globErr := filepath.Glob(pattern)
+	if globErr != nil {
+		err = globErr
+		return
+	}else if len(matchedFiles) == 0 {
+		err = errors.New("No such file")
+		return
+	}
+	for _, file := range matchedFiles {
+		switch strings.ToLower(filepath.Ext(file)) {
+		case ".dta":
+			dataPath = file
+		case ".dsc":
+			cfgPath = file
+		default:
+			err = errors.New("file extension does not match")
 			return
-		}
-		// if there is no format(e.g. BrukerBES3T) that needs one file
-		// we should update if statement below
-		if len(matchedFiles) == 0 {  
-			err = errors.New("No such file")
-			return
-		}
-		for _, file := range matchedFiles {
-			switch strings.ToLower(filepath.Ext(file)) {
-			case ".dta":
-				dataPath = file
-			case ".dsc":
-				cfgPath = file
-			default:
-				err = errors.New("file extension does not match")
-				return
-			}
 		}
 	}
 	return
