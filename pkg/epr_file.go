@@ -46,7 +46,6 @@ func getCfg(cfgPath string) (map[string]string, error) {
 		}
 		kv := strings.Fields(text)
 		if len(kv) < 2 {
-			cfgMap[kv[0]] = ""
 			continue
 		}
 		cfgMap[kv[0]] = kv[1]
@@ -63,11 +62,11 @@ func createAxes(cfgMap map[string]string) (axes, error) {
 	if err != nil {
 		return *axes, err
 	}
-	xMin, err := strconv.Atoi(cfgMap["XMIN"])
+	xMin, err := strconv.ParseFloat(cfgMap["XMIN"], 64)
 	if err != nil {
 		return *axes, err
 	}
-	xWid, err := strconv.Atoi(cfgMap["XWID"])
+	xWid, err := strconv.ParseFloat(cfgMap["XWID"], 64)
 	if err != nil {
 		return *axes, err
 	}
@@ -79,12 +78,10 @@ func createAxes(cfgMap map[string]string) (axes, error) {
 	return *axes, nil
 }
 
-func createAxisIDX(points, min, width int) []float64 {
+func createAxisIDX(points int, min, width float64) []float64 {
 	abscissa := make([]float64, points)
-	minFloat := float64(min)
-	widthFloat := float64(width)
 	for i := 0; i < points; i++ {
-		abscissa[i] = minFloat + widthFloat/float64(points-1)*float64(i)
+		abscissa[i] = min + width/float64(points-1)*float64(i)
 	}
 	return abscissa
 }
