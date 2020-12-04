@@ -6,8 +6,8 @@ import (
 )
 
 type ParsedArgs struct {
-	CfgPath string
-	DataPath string
+	CfgPath    string
+	DataPath   string
 	OutputPath string
 }
 
@@ -27,8 +27,8 @@ func Parse() (parsedArgs ParsedArgs, err error) {
 	}
 
 	return ParsedArgs{
-		CfgPath: *c,
-		DataPath: *d,
+		CfgPath:    *c,
+		DataPath:   *d,
 		OutputPath: *o,
 	}, err
 }

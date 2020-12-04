@@ -24,7 +24,7 @@ func asumeFormat(filePath string) fileFormat {
 }
 
 func EprLoad(parsedArgs args.ParsedArgs) (*EprFile, error) {
-	if parsedArgs.CfgPath != "" && parsedArgs.DataPath!= "" {
+	if parsedArgs.CfgPath != "" && parsedArgs.DataPath != "" {
 		return NewEprFile(parsedArgs.DataPath, parsedArgs.CfgPath)
 	}
 	return nil, nil
@@ -37,7 +37,7 @@ func getDataCfgPath(filePath string) (dataPath, cfgPath string, err error) {
 	if globErr != nil {
 		err = globErr
 		return
-	}else if len(matchedFiles) == 0 {
+	} else if len(matchedFiles) == 0 {
 		err = errors.New("No such file")
 		return
 	}
