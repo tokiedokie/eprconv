@@ -2,7 +2,6 @@ package internal
 
 import (
 	"eprconv/pkg"
-	"io/ioutil"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -30,8 +29,6 @@ func TestAllTestData(t *testing.T) {
 		"../test/data/be3tintlit",
 		"../test/data/bes3tint",
 	}
-	tmpFile, _ := ioutil.TempFile("", "test.txt")
-	defer tmpFile.Close()
 	for _, path := range paths {
 		t.Run(path, func(t *testing.T) {
 			data, cfg, _ := getDataCfgPath(path)
