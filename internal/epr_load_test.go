@@ -21,7 +21,7 @@ func TestGetDataCfgPath(t *testing.T) {
 }
 
 func TestAllTestData(t *testing.T) {
-	var paths = []string {
+	var paths = []string{
 		"../test/data/010_cutpp_10kfs",
 		"../test/data/2010_06_25_IKKG_C95_2pESEEM",
 		"../test/data/00012107",
