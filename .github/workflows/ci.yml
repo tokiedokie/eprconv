@@ -28,4 +28,5 @@ jobs:
       run: go test -v ./...
     
     - name: Format
+      if: runner.os == 'Linux'
       run: diff -u <(echo -n) <(go fmt ./...)
