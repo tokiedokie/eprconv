@@ -57,5 +57,7 @@ func getDataCfgPath(filePath string) (dataPath, cfgPath string, err error) {
 			return
 		}
 	}
+	dataPath = filepath.Clean(dataPath)
+	cfgPath = filepath.Clean(cfgPath)
 	return
 }

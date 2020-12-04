@@ -2,6 +2,7 @@ package internal
 
 import (
 	"eprconv/pkg"
+	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -12,12 +13,14 @@ func TestAsumeFormat(t *testing.T) {
 }
 
 func TestGetDataCfgPath(t *testing.T) {
+	dataExpect := filepath.Clean("../test/data/bes3tint.dta")
+	cfgExpect := filepath.Clean("../test/data/bes3tint.dsc")
 	dp, cp, _ := getDataCfgPath("../test/data/bes3tint.dta")
-	assert.Equal(t, dp, "../test/data/bes3tint.dta")
-	assert.Equal(t, cp, "../test/data/bes3tint.dsc")
+	assert.Equal(t, dataExpect, dp)
+	assert.Equal(t, cfgExpect, cp)
 	dp, cp, _ = getDataCfgPath("../test/data/bes3tint")
-	assert.Equal(t, dp, "../test/data/bes3tint.dta")
-	assert.Equal(t, cp, "../test/data/bes3tint.dsc")
+	assert.Equal(t, dataExpect, dp)
+	assert.Equal(t, cfgExpect, cp)
 }
 
 func TestAllTestData(t *testing.T) {
