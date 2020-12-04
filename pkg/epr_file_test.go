@@ -1,6 +1,7 @@
 package pkg
 
 import (
+	"io/ioutil"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -40,4 +41,23 @@ func TestNumberOfData(t *testing.T) {
 	data1 := len(data)
 	data2 := len(testEprFile.Axes.X)
 	assert.Equal(t, data1, data2)
+}
+
+func TestAllTestData(t *testing.T) {
+	var paths = []struct {
+		data string
+		cfg  string
+	}{
+		{
+			data: "../test/data/bes3tint.dsc",
+			cfg:  "../test/data/bes3tint.dta",
+		},
+	}
+	tmpFile, _ := ioutil.TempFile("", "test.txt")
+	defer tmpFile.Close()
+	for _, path := range paths {
+		t.Run(path.data, func(t *testing.T) {
+			NewEprFile(path.data, path.cfg)
+		})
+	}
 }
