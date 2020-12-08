@@ -3,6 +3,8 @@ package output
 import (
 	"fmt"
 	"os"
+	"path/filepath"
+	"strings"
 
 	"eprconv/pkg"
 )
@@ -19,8 +21,17 @@ func Output(path string, eprFile pkg.EprFile) error {
 		return err
 	}
 
+	separater := " "
+	switch strings.ToLower(filepath.Ext(path)) {
+	case ".csv":
+		separater = ","
+	case ".tsv":
+		separater = "\t"
+	}
+
+	format := fmt.Sprintf("%%.8e%s%%.8e\n", separater)
 	for i := 0; i < len(eprFile.Axes.X); i++ {
-		fmt.Fprintf(file, "%e %e\n", eprFile.Axes.X[i], data[i])
+		fmt.Fprintf(file, format, eprFile.Axes.X[i], data[i])
 	}
 	return nil
 }
