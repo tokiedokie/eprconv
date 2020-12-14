@@ -24,8 +24,6 @@ func Parse() (parsedArgs ParsedArgs, err error) {
 		err = errors.New("Configuration file must be specified")
 	} else if *d == "" && filePath == "" {
 		err = errors.New("Data file must be specified")
-	} else if *o == "" {
-		err = errors.New("Output file must be specified")
 	}
 
 	return ParsedArgs{

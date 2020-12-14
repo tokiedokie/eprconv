@@ -17,8 +17,8 @@ type eprFileMethod interface {
 }
 
 type EprFile struct {
-	dataPath string
-	cfgPath  string
+	DataPath string
+	CfgPath  string
 	cfg      map[string]string
 	Axes     axes
 }
@@ -90,9 +90,9 @@ func createAxisIDX(points int, min, width float64) []float64 {
 func NewEprFile(dataPath string, cfgPath string) (*EprFile, error) {
 	var err error
 	f := new(EprFile)
-	f.dataPath = dataPath
-	f.cfgPath = cfgPath
-	f.cfg, err = getCfg(f.cfgPath)
+	f.DataPath = dataPath
+	f.CfgPath = cfgPath
+	f.cfg, err = getCfg(f.CfgPath)
 	if err != nil {
 		return f, err
 	}
@@ -146,11 +146,11 @@ func (e *EprFile) GetData() ([]float64, error) {
 		panic("Unknown value for keyword IRFMT in .DSC file!")
 	}
 
-	return getMatrix(e.dataPath, byteOrder, reflect.ArrayOf(xPoints, t)), nil
+	return getMatrix(e.DataPath, byteOrder, reflect.ArrayOf(xPoints, t)), nil
 }
 
 func (e *EprFile) dataSize() (int64, error) {
-	info, err := os.Stat(e.dataPath)
+	info, err := os.Stat(e.DataPath)
 	if err != nil {
 		return 0, err
 	}

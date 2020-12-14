@@ -15,10 +15,13 @@ func main() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
+
 	epr, err := internal.EprLoad(parsedArgs)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	err = output.Output(parsedArgs.OutputPath, *epr)
+
+	outputFile := output.NewOutputFile(*epr, parsedArgs.OutputPath, "")
+	err = output.Output(*outputFile)
 }

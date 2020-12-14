@@ -1,5 +1,6 @@
 package output
 
+/*
 import (
 	"io/ioutil"
 	"os"
@@ -17,3 +18,4 @@ func TestOutput(t *testing.T) {
 
 	Output(tmpFile.Name(), *testEprFile)
 }
+*/

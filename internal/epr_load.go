@@ -52,10 +52,10 @@ func getDataCfgPath(filePath string) (dataPath, cfgPath string, err error) {
 			dataPath = file
 		case ".dsc":
 			cfgPath = file
-		default:
-			err = errors.New("file extension does not match")
-			return
 		}
+	}
+	if dataPath == "" || cfgPath == "" {
+		err = errors.New("file extension does not match")
 	}
 	dataPath = filepath.Clean(dataPath)
 	cfgPath = filepath.Clean(cfgPath)
