@@ -1,6 +1,5 @@
 package output
 
-/*
 import (
 	"io/ioutil"
 	"os"
@@ -16,6 +15,6 @@ func TestOutput(t *testing.T) {
 	tmpFile, _ := ioutil.TempFile("", "test.txt")
 	defer os.Remove(tmpFile.Name())
 
-	Output(tmpFile.Name(), *testEprFile)
+	of := NewOutputFile(*testEprFile, tmpFile.Name(), "")
+	Output(*of)
 }
-*/
