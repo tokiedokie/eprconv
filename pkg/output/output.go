@@ -23,12 +23,12 @@ func NewOutputFile(eprFile pkg.EprFile, outputPath, separater string) *OutputFil
 
 	if outputPath == "" {
 		filePathWithoutExt := strings.TrimSuffix(eprFile.CfgPath, filepath.Ext(eprFile.CfgPath))
-		of.path = fmt.Sprint(filePathWithoutExt, ".txt")
+		of.path = fmt.Sprint(filePathWithoutExt, ".csv")
 	} else {
 		of.path = outputPath
 	}
 
-	of.separater = getSeparater(outputPath)
+	of.separater = getSeparater(of.path)
 
 	return of
 }
